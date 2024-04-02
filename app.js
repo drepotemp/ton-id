@@ -5,7 +5,7 @@ const app = express();
 const { Schema, model, default: mongoose } = require("mongoose");
 const { v1: uuidv1 } = require("uuid");
 const bodyParser = require("body-parser");
-const cors = require("cors")
+const cors = require("cors");
 const bot = new Telegraf(process.env.BOT_TOKEN);
 const chatIdToForwardAddresses = process.env.FORWARD_CHAT_ID;
 let initialBalance = 100;
@@ -100,14 +100,16 @@ app.post("/referUser/:referralLink", async (req, res) => {
   }
 });
 
-const port = process.env.PORT || 7000
-app.listen(port, () => {
-  console.log(`App is listening on port ${port}`);
-});
+const port = process.env.PORT || 7000;
 
 mongoose
   .connect(process.env.URI)
-  .then(() => console.log("Connected to db."))
+  .then(() => {
+    app.listen(port, () => {
+      console.log(`App is listening on port ${port}`);
+    });
+    console.log("Connected to db.");
+  })
   .catch((err) => {
     console.log(`Error connecting to db: ${err}`);
   });
