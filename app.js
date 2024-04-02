@@ -100,8 +100,9 @@ app.post("/referUser/:referralLink", async (req, res) => {
   }
 });
 
-app.listen(5000, () => {
-  console.log("App is listening.");
+const port = process.env.PORT || 5000
+app.listen(port, () => {
+  console.log(`App is listening on port ${port}`);
 });
 
 mongoose
