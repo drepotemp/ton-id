@@ -173,7 +173,7 @@ bot.start(async (ctx) => {
         [
           {
             text: "Task 2: Subscribe to our telegram channel ➤",
-            url: "https://t.me/ton_identity",
+            url: "https://t.me/ton_idz",
           },
         ],
         [
