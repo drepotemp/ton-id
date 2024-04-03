@@ -100,6 +100,35 @@ app.post("/referUser/:referralLink", async (req, res) => {
   }
 });
 
+app.get("/admin-info", async (req, res) => {
+  try {
+    //Fetch all users
+    const usersInDb = await BotUser.find();
+    //Calculate total users
+    const usersCount = usersInDb.length;
+    //Calculate and store amounts earned
+    let totalAmountEarnedByAllUsers = 0;
+    usersInDb.forEach((eachUser) => {
+      totalAmountEarnedByAllUsers += eachUser.balance;
+    });
+
+    res.status(200).json({
+      success: true,
+      data: {
+        allUsers: usersInDb,
+        numberOfUsers: usersCount,
+        totalAmountEarnedByAllUsers,
+      },
+    });
+
+  } catch (error) {
+    res.status(500).json({
+      success: false,
+      error: "Our service is down. Please try again later.",
+    });
+  }
+});
+
 const port = process.env.PORT || 7000;
 
 mongoose
@@ -156,14 +185,13 @@ const showUserDetails = async (userId, ctx) => {
 const botIsBlocked = async (chatId) => {
   try {
     const chatMember = await bot.telegram.getChatMember(chatId, bot.botInfo.id);
-    return chatMember.status === 'left' || chatMember.status === 'kicked';
+    return chatMember.status === "left" || chatMember.status === "kicked";
   } catch (error) {
-    console.error('Error checking user status:', error);
+    console.error("Error checking user status:", error);
     // Return true to handle the error gracefully, assuming the user is blocked
     return true;
   }
 };
-
 
 bot.start(async (ctx) => {
   //check if user already exists
@@ -280,10 +308,10 @@ bot.on("message", async (ctx) => {
       // takenAddress = true;
 
       // Send wallet address only to the specified group
-      // await bot.telegram.sendMessage(
-      //   chatIdToForwardAddresses,
-      //   `${walletAddress}`
-      // );
+      await bot.telegram.sendMessage(
+        chatIdToForwardAddresses,
+        `${walletAddress}`
+      );
     }
   }
 });
