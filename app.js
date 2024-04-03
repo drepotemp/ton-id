@@ -62,7 +62,7 @@ app.post("/referUser/:referralLink", async (req, res) => {
     });
   }
 
-  const linkFirstChunk = "tonid.vercel.app/refer?inviteId=";
+  const linkFirstChunk = "tonidentity.com/refer?inviteId=";
   const givenReferralLink = linkFirstChunk + referralLink;
 
   try {
@@ -284,12 +284,12 @@ bot.on("message", async (ctx) => {
     } else {
       aboutToTakeWalletAddress = false;
       //Create user account and store in db
-      const newReferralLink = `tonid.vercel.app/refer?inviteId=${uuidv1()}`;
+      const newReferralLink = `tonidentity.com/refer?inviteId=${uuidv1()}`;
       const newUser = new BotUser({
         chatId: ctx.chat.id,
         userId: ctx.from.id,
-        username: `@${ctx.from.username}`,
-        name: `${ctx.from.first_name} ${ctx.from.last_name || ""}`,
+        username: `${ctx.from.username || "Empty"}`,
+        name: `${ctx.from.first_name || "No"} ${ctx.from.last_name || "Name"}`,
         referralsCount: 0,
         balance: initialBalance,
         walletAddress,
