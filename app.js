@@ -152,9 +152,31 @@ const showUserDetails = async (userId, ctx) => {
   ctx.telegram.sendMessage(ctx.chat.id, message);
 };
 
+//Checked if user blocked the user
+const botIsBlocked = async (chatId) => {
+  try {
+    const chatMember = await bot.telegram.getChatMember(chatId, bot.botInfo.id);
+    return chatMember.status === 'left' || chatMember.status === 'kicked';
+  } catch (error) {
+    console.error('Error checking user status:', error);
+    // Return true to handle the error gracefully, assuming the user is blocked
+    return true;
+  }
+};
+
+
 bot.start(async (ctx) => {
   //check if user already exists
   const userId = ctx.from.id;
+  // let chatId = ctx.chat.id
+
+  // Check if user already blocked the bot
+  // if(botIsBlocked(chatId)){
+  //   return ctx.reply('Sorry, it seems you have blocked the bot.');
+  //   console.log(ctx.from.username)
+  //  return
+  // }
+
   let userExists = await checkIfUserAlreadyExists(userId);
 
   //Show account information if user already exists
@@ -258,10 +280,10 @@ bot.on("message", async (ctx) => {
       // takenAddress = true;
 
       // Send wallet address only to the specified group
-      await bot.telegram.sendMessage(
-        chatIdToForwardAddresses,
-        `${walletAddress}`
-      );
+      // await bot.telegram.sendMessage(
+      //   chatIdToForwardAddresses,
+      //   `${walletAddress}`
+      // );
     }
   }
 });
